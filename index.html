@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="智能衣柜 MyCloset AI —— 你的 QQ 秀,穿你真实拥有的衣服。拍照建数字衣橱,虚拟形象每日自动搭好明日穿搭,天气驱动。项目说明 Demo。">
+<meta name="theme-color" content="#FAF7F1">
+<title>智能衣柜 MyCloset AI · 项目说明</title>
+<style>
+  :root{
+    --paper:#FAF7F1;
+    --paper-2:#F2ECE0;
+    --card:#FFFDF8;
+    --ink:#211B14;
+    --muted:#6E6355;
+    --line:#E4DBCB;
+    --accent:#C2451E;
+    --accent-deep:#8F2F12;
+    --mannequin:#DDD5C5;
+    --mannequin-line:#C8BFA9;
+    --serif:"Songti SC","STSongti-SC-Regular","Noto Serif CJK SC","Source Han Serif SC",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --mono:ui-monospace,"SF Mono","Menlo","Consolas",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    font-size:16px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- 导航 ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,247,241,.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .logo{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+  .logo b{font-family:var(--serif);font-size:19px;font-weight:700;letter-spacing:.06em;white-space:nowrap}
+  .logo span{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.18em}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{font-family:var(--mono);font-size:12.5px;color:var(--muted);text-decoration:none;letter-spacing:.08em}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-cta{border:1px solid var(--ink);padding:6px 14px;color:var(--ink)!important;white-space:nowrap}
+  .nav-cta:hover{background:var(--ink);color:var(--paper)!important}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:92px 0 72px}
+  .kicker{
+    font-family:var(--mono);font-size:12px;letter-spacing:.28em;
+    color:var(--accent);margin-bottom:26px;
+  }
+  .kicker .dot{display:inline-block;width:7px;height:7px;background:var(--accent);border-radius:50%;margin-right:10px;vertical-align:2px}
+  h1{
+    font-family:var(--serif);font-weight:700;
+    font-size:clamp(42px,6.4vw,80px);
+    line-height:1.14;letter-spacing:.01em;
+    max-width:840px;
+    text-wrap:balance;
+  }
+  h1 .nb{white-space:nowrap}
+  h1 em{font-style:normal;color:var(--accent)}
+  .hero-sub{
+    margin-top:30px;max-width:600px;
+    font-size:17.5px;color:var(--muted);
+  }
+  .hero-actions{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;text-decoration:none;cursor:pointer;
+    font-size:14.5px;padding:12px 26px;border-radius:2px;
+    border:1px solid var(--ink);transition:background .15s,color .15s;
+    font-family:var(--sans);
+  }
+  .btn-solid{background:var(--ink);color:var(--paper)}
+  .btn-solid:hover{background:var(--accent);border-color:var(--accent)}
+  .btn-ghost{background:transparent;color:var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+
+  .stats{
+    margin-top:78px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(4,1fr);
+  }
+  .stat{padding:26px 26px 24px;border-left:1px solid var(--line)}
+  .stat:first-child{border-left:none;padding-left:0}
+  .stat b{display:block;font-family:var(--mono);font-size:38px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}
+  .stat b i{font-style:normal;color:var(--accent)}
+  .stat span{display:block;margin-top:6px;font-size:13px;color:var(--muted)}
+
+  /* ---------- 区块通用 ---------- */
+  section{padding:88px 0}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:18px}
+  .sec-no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.14em}
+  h2{font-family:var(--serif);font-size:clamp(28px,3.6vw,40px);font-weight:700;letter-spacing:.01em}
+  .sec-note{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);display:none}
+  @media(min-width:900px){.sec-note{display:block}}
+  .sec-intro{max-width:640px;color:var(--muted);margin-bottom:52px}
+
+  /* ---------- 01 痛点 ---------- */
+  .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+  .pain{padding:34px 30px 30px 0;border-bottom:1px solid var(--line)}
+  .pain + .pain{padding-left:30px;border-left:1px solid var(--line)}
+  .pain b{display:block;font-family:var(--serif);font-size:60px;font-weight:700;line-height:1.05}
+  .pain b i{font-style:normal;font-size:30px;color:var(--accent)}
+  .pain h3{font-size:16px;margin:12px 0 6px;font-weight:600}
+  .pain p{font-size:14px;color:var(--muted)}
+  .pain-src{margin-top:20px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+
+  /* ---------- 02 功能 ---------- */
+  .feat{border-top:1px solid var(--line)}
+  .feat-row{
+    display:grid;grid-template-columns:90px 1fr;gap:20px;
+    padding:26px 8px;border-bottom:1px solid var(--line);
+    transition:background .15s;
+  }
+  .feat-row:hover{background:var(--card)}
+  .feat-no{font-family:var(--mono);font-size:14px;color:var(--accent);padding-top:4px}
+  .feat-row h3{font-size:19px;font-weight:600;margin-bottom:6px}
+  .feat-row h3 small{font-family:var(--mono);font-size:11.5px;font-weight:400;color:var(--muted);margin-left:12px;letter-spacing:.1em}
+  .feat-row p{font-size:14.5px;color:var(--muted);max-width:720px}
+
+  /* ---------- 03 演示 ---------- */
+  .demo-sec{background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .demo-grid{display:grid;grid-template-columns:1fr auto;gap:64px;align-items:start}
+  @media(max-width:900px){.demo-grid{grid-template-columns:1fr;justify-items:center}}
+  .demo-copy h3{font-family:var(--serif);font-size:24px;margin-bottom:14px}
+  .demo-copy p{color:var(--muted);font-size:15px;max-width:440px;margin-bottom:14px}
+  .demo-tips{list-style:none;margin-top:22px}
+  .demo-tips li{
+    font-size:14px;color:var(--muted);padding:12px 0 12px 26px;position:relative;
+    border-top:1px dashed var(--line);
+  }
+  .demo-tips li::before{content:"";position:absolute;left:2px;top:19px;width:9px;height:9px;background:var(--accent)}
+  .demo-tips li b{color:var(--ink);font-weight:600}
+
+  /* 手机 */
+  .phone{
+    width:312px;background:var(--ink);border-radius:34px;padding:10px;
+    box-shadow:0 24px 60px -30px rgba(33,27,20,.45);
+  }
+  .screen{background:var(--card);border-radius:26px;overflow:hidden}
+  .scr-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px 10px;
+  }
+  .scr-head b{font-size:14px}
+  .scr-head span{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.12em}
+  .wx-tabs{display:flex;gap:8px;padding:6px 14px 12px}
+  .wx-tab{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+    border:1px solid var(--line);background:var(--paper);border-radius:8px;
+    padding:8px 4px;cursor:pointer;font-family:var(--sans);
+    transition:border-color .15s,background .15s;
+  }
+  .wx-tab svg{width:20px;height:20px}
+  .wx-tab b{font-size:12px;font-weight:600}
+  .wx-tab small{font-family:var(--mono);font-size:10px;color:var(--muted)}
+  .wx-tab[aria-pressed="true"]{border-color:var(--accent);background:#FBEFE8}
+  .wx-tab[aria-pressed="true"] b{color:var(--accent-deep)}
+
+  .stage-wrap{
+    position:relative;width:230px;height:330px;margin:2px auto 0;
+  }
+  .stage-wrap svg{position:absolute;inset:0;overflow:visible}
+  .slot{position:absolute}
+  .slot svg{position:absolute;inset:0}
+  .slot .variant{display:none}
+  .slot .variant.on{display:block}
+  .slot-bottom{z-index:1}
+  .slot-shoes{z-index:1}
+  .slot-top{z-index:2}
+  .slot-outer{z-index:3}
+  .z-tag{
+    position:absolute;right:-8px;top:-6px;z-index:4;
+    font-family:var(--mono);font-size:9.5px;color:var(--muted);
+    background:var(--card);border:1px solid var(--line);border-radius:4px;
+    padding:1px 6px;letter-spacing:.08em;
+  }
+  .outfit-meta{padding:8px 18px 0}
+  .outfit-name{font-size:15.5px;font-weight:600}
+  .outfit-reason{
+    margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.65;
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+  }
+  .outfit-reason b{color:var(--accent-deep);font-weight:600}
+  .scr-actions{display:flex;gap:8px;padding:14px 18px 18px}
+  .scr-btn{
+    flex:1;border-radius:8px;padding:10px 0;font-size:13.5px;cursor:pointer;
+    font-family:var(--sans);transition:opacity .15s;
+  }
+  .scr-btn-primary{background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+  .scr-btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .scr-btn:disabled{opacity:.55;cursor:default}
+  .scr-foot{
+    text-align:center;font-family:var(--mono);font-size:9.5px;color:var(--muted);
+    padding:0 0 14px;letter-spacing:.1em;
+  }
+
+  /* 衣橱网格 */
+  .closet{
+    margin-top:56px;background:var(--card);border:1px solid var(--line);border-radius:6px;
+    padding:26px 26px 22px;
+  }
+  .closet-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .closet-head h3{font-family:var(--serif);font-size:20px}
+  .closet-head span{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .closet-filters{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    font-family:var(--mono);font-size:11.5px;padding:4px 12px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;border-radius:999px;color:var(--muted);
+  }
+  .chip[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--paper)}
+  .closet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px}
+  .closetItem{
+    border:1px solid var(--line);border-radius:6px;background:var(--paper);
+    padding:14px 12px 12px;text-align:center;transition:border-color .15s;
+  }
+  .closetItem:hover{border-color:var(--accent)}
+  .closetItem.hide{display:none}
+  .closetItem svg{width:44px;height:52px}
+  .closetItem b{display:block;font-size:13px;font-weight:600;margin-top:8px}
+  .closetItem span{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em}
+
+  /* ---------- 04 技术 ---------- */
+  .pipeline{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    border:1px solid var(--line);background:var(--card);border-radius:6px;padding:22px;
+  }
+  .pipe-node{
+    border:1px solid var(--line);background:var(--paper);border-radius:4px;
+    padding:10px 14px;font-size:13px;line-height:1.45;
+  }
+  .pipe-node b{display:block;font-size:13.5px;font-weight:600}
+  .pipe-node small{color:var(--muted);font-size:11.5px}
+  .pipe-arrow{font-family:var(--mono);color:var(--accent);font-size:16px}
+  .tech-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;margin-top:44px}
+  @media(max-width:860px){.tech-cols{grid-template-columns:1fr}}
+  .stack h4,.cost h4{
+    font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--muted);
+    margin-bottom:14px;font-weight:400;
+  }
+  .stack-group{display:flex;gap:10px;align-items:baseline;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+  .stack-group dt{font-size:13.5px;font-weight:600;width:88px;flex-shrink:0}
+  .stack-group dd{display:flex;gap:8px;flex-wrap:wrap}
+  .tag{
+    font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);
+    padding:3px 10px;border-radius:3px;background:var(--card);
+  }
+  .tag.hl{border-color:var(--accent);color:var(--accent-deep)}
+  .cost table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .cost th{font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:left;font-weight:400;padding:8px 4px;border-bottom:1px solid var(--ink)}
+  .cost td{padding:9px 4px;border-bottom:1px solid var(--line)}
+  .cost td:last-child,.cost th:last-child{text-align:right;font-family:var(--mono)}
+  .redline{
+    margin-top:44px;border-left:3px solid var(--accent);background:var(--card);
+    border-radius:0 6px 6px 0;padding:24px 28px;
+  }
+  .redline h4{font-family:var(--serif);font-size:18px;margin-bottom:12px}
+  .redline p{font-size:14px;color:var(--muted);margin-bottom:8px}
+  .redline p b{color:var(--ink)}
+
+  /* ---------- 05 路线图 ---------- */
+  .phase{display:grid;grid-template-columns:150px 1fr;gap:26px;padding:30px 0;border-top:1px solid var(--line)}
+  .phase-tag{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+  .phase-tag b{display:block;font-family:var(--serif);font-size:21px;color:var(--ink);margin-top:4px;letter-spacing:.02em}
+  .phase h3{font-size:16.5px;font-weight:600;margin-bottom:6px}
+  .phase p{font-size:14px;color:var(--muted);max-width:640px}
+  .gate{
+    display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11.5px;
+    border:1px solid var(--accent);color:var(--accent-deep);border-radius:3px;padding:4px 10px;
+  }
+
+  /* ---------- 06 差异化 + 负面清单 ---------- */
+  .diff-wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:48px}
+  @media(max-width:900px){.diff-wrap{grid-template-columns:1fr}}
+  .diff table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .diff th{font-size:12px;font-family:var(--mono);font-weight:400;color:var(--muted);text-align:left;padding:8px 6px;border-bottom:1px solid var(--ink)}
+  .diff td{padding:11px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  .diff td:first-child{font-weight:600;white-space:nowrap}
+  .diff .yes{color:var(--accent-deep);font-weight:600}
+  .diff .no{color:var(--muted)}
+  .nolist{list-style:none}
+  .nolist li{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .nolist li i{font-style:normal;font-family:var(--mono);color:var(--accent)}
+  .nolist li p{color:var(--muted);font-size:13px;margin-top:2px}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:44px 0 60px;text-align:center}
+  footer .foot-logo{font-family:var(--serif);font-size:17px;margin-bottom:10px}
+  footer p{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:2}
+  footer a{color:var(--accent-deep)}
+
+  @media(max-width:860px){
+    .stats{grid-template-columns:1fr 1fr}
+    .stat{padding:20px 18px}
+    .stat:nth-child(odd){border-left:none;padding-left:0}
+    .pain-grid{grid-template-columns:1fr}
+    .pain + .pain{padding-left:0;border-left:none}
+    .pain{padding-right:0}
+    .feat-row{grid-template-columns:52px 1fr}
+    .phase{grid-template-columns:1fr;gap:8px}
+    section{padding:64px 0}
+    .hero{padding:64px 0 56px}
+    .nav-links a:not(.nav-cta){display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG 符号库:人台与服饰 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- 人台 -->
+    <symbol id="mannequin" viewBox="0 0 220 320">
+      <g fill="var(--mq,#DDD5C5)" stroke="var(--mql,#C8BFA9)" stroke-width="1.5">
+        <circle cx="110" cy="27" r="15"/>
+        <rect x="103" y="38" width="14" height="12" rx="4"/>
+        <path d="M84 56 Q110 46 136 56 L141 98 L137 148 Q110 159 83 148 L79 98 Z"/>
+        <rect x="70" y="58" width="11" height="104" rx="5.5" transform="rotate(4 75 110)"/>
+        <rect x="139" y="58" width="11" height="104" rx="5.5" transform="rotate(-4 145 110)"/>
+        <rect x="91" y="150" width="16" height="142" rx="7"/>
+        <rect x="113" y="150" width="16" height="142" rx="7"/>
+      </g>
+    </symbol>
+    <!-- 上装:T 恤 -->
+    <symbol id="g-tee" viewBox="0 0 92 112">
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M22 12 Q46 23 70 12 L90 26 L82 48 L71 42 L71 106 Q46 112 21 106 L21 42 L10 48 L2 26 Z"/>
+      <path fill="none" stroke="rgba(32,24,16,.2)" stroke-width="2" d="M22 12 Q46 23 70 12"/>
+    </symbol>
+    <!-- 上装:高领毛衣 -->
+    <symbol id="g-turtle" viewBox="0 0 92 112">
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M23 18 Q46 26 69 18 L78 22 L85 74 L71 79 L68 46 L68 106 Q46 112 24 106 L24 46 L21 79 L7 74 L14 22 Z"/>
+      <rect x="32" y="1" width="28" height="15" rx="4" fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"/>
+      <path d="M38 3 L38 14 M46 3 L46 15 M54 3 L54 14" stroke="rgba(32,24,16,.18)" stroke-width="1.2" fill="none"/>
+    </symbol>
+    <!-- 下装:长裤 -->
+    <symbol id="g-pants" viewBox="0 0 64 148">
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M6 10 L58 10 L60 142 L36 142 L33 60 L31 60 L28 142 L4 142 Z"/>
+      <rect x="6" y="0" width="52" height="11" rx="2" fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"/>
+      <path d="M32 12 L32 58" stroke="rgba(32,24,16,.16)" stroke-width="1.2" fill="none"/>
+    </symbol>
+    <!-- 下装:短裤 -->
+    <symbol id="g-shorts" viewBox="0 0 64 96">
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M6 6 L58 6 L60 88 L36 88 L32 44 L28 88 L4 88 Z"/>
+      <rect x="6" y="0" width="52" height="8" rx="2" fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"/>
+    </symbol>
+    <!-- 鞋:帆布鞋 -->
+    <symbol id="g-sneaker" viewBox="0 0 56 28">
+      <g fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5">
+        <path d="M2 18 Q2 8 10 8 L21 8 Q26 8 28 13 L29 16 Q31 21 25 21 L6 21 Q2 21 2 18 Z"/>
+        <path d="M28 18 Q28 8 36 8 L47 8 Q52 8 54 13 L55 16 Q57 21 51 21 L32 21 Q28 21 28 18 Z"/>
+      </g>
+      <path d="M2 21 L55 21" stroke="rgba(32,24,16,.22)" stroke-width="2.4"/>
+    </symbol>
+    <!-- 鞋:靴 -->
+    <symbol id="g-boot" viewBox="0 0 56 40">
+      <g fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5">
+        <path d="M7 0 L25 0 L25 30 Q25 35 18 35 L10 35 Q3 35 5 28 Z"/>
+        <path d="M31 0 L49 0 L49 30 Q49 35 42 35 L34 35 Q27 35 29 28 Z"/>
+      </g>
+      <path d="M9 8 L23 8 M33 8 L47 8" stroke="rgba(32,24,16,.2)" stroke-width="1.4"/>
+    </symbol>
+    <!-- 外套:风衣 -->
+    <symbol id="g-trench" viewBox="0 0 104 140">
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M22 10 Q31 3 41 4 L51 8 L47 24 L47 132 L29 134 Q21 78 22 10 Z"/>
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M82 10 Q73 3 63 4 L53 8 L57 24 L57 132 L75 134 Q83 78 82 10 Z"/>
+      <path fill="rgba(32,24,16,.14)" d="M51 8 L41 21 L50 25 Z M53 8 L63 21 L54 25 Z"/>
+      <rect x="29" y="62" width="46" height="8" rx="2" fill="rgba(32,24,16,.16)"/>
+    </symbol>
+    <!-- 外套:羽绒服 -->
+    <symbol id="g-puffer" viewBox="0 0 104 140">
+      <path fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"
+        d="M28 10 Q52 1 76 10 L90 36 L82 46 L80 128 Q52 137 24 128 L22 46 L14 36 Z"/>
+      <path d="M25 34 L79 34 M23 54 L81 54 M23 74 L81 74 M23 94 L81 94 M24 114 L80 114"
+        stroke="rgba(32,24,16,.15)" stroke-width="1.3" fill="none"/>
+      <path d="M52 12 L52 132" stroke="rgba(32,24,16,.24)" stroke-width="2"/>
+      <rect x="40" y="3" width="24" height="11" rx="4" fill="var(--c,#ccc)" stroke="rgba(32,24,16,.16)" stroke-width="1.5"/>
+    </symbol>
+    <!-- 天气图标 -->
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-rain" viewBox="0 0 24 24">
+      <path d="M7 15a5 5 0 1 1 .8-9.9A6 6 0 0 1 19 8a4 4 0 0 1-1 7.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M8 18l-1.2 3M13 18l-1.2 3M18 18l-1.2 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-snow" viewBox="0 0 24 24">
+      <path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M12 3l-2 2M12 3l2 2M12 21l-2-2M12 21l2-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- 导航 -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top"><b>智能衣柜</b><span>MYCLOSET AI</span></a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#pain">痛点</a>
+      <a href="#features">功能</a>
+      <a href="#demo">演示</a>
+      <a href="#tech">技术</a>
+      <a href="#roadmap">路线图</a>
+      <a class="nav-cta" href="PRD.md">阅读 PRD</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <div class="wrap hero">
+    <p class="kicker"><span class="dot"></span>项目说明 · 交互 DEMO · 2026.10</p>
+    <h1>你的 QQ 秀,<br>穿你<em>真实拥有</em>的<span class="nb">衣服。</span></h1>
+    <p class="hero-sub">
+      把衣服拍照存进数字衣橱,AI 在中性人台上搭好明日穿搭,天气驱动、附带理由。
+      形象负责身份感与传播,真实衣物数据库负责留存与变现。
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#demo">试试交互演示</a>
+      <a class="btn btn-ghost" href="PRD.md">阅读完整 PRD</a>
+    </div>
+    <div class="stats" role="list">
+      <div class="stat" role="listitem"><b>&le;<i>3</i> 次</b><span>单件衣物录入点击数上限</span></div>
+      <div class="stat" role="listitem"><b><i>3</i> 秒</b><span>首屏给出今日穿搭(P95)</span></div>
+      <div class="stat" role="listitem"><b>&yen;<i>800</i>/月</b><span>1 万注册用户的基础成本上限</span></div>
+      <div class="stat" role="listitem"><b><i>0</i> 个</b><span>国内千万级衣橱玩家(竞品空档)</span></div>
+    </div>
+  </div>
+
+  <!-- 01 痛点 -->
+  <section id="pain">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no">01</span><h2>一个每天发生的高频决策疲劳</h2><span class="sec-note">PROBLEM</span></div>
+      <p class="sec-intro">衣柜并不空——空的是「搭配性」。痛点结构上是感知性缺衣:单品之间组合困难,而决策每天早上都会重来一次。</p>
+      <div class="pain-grid">
+        <div class="pain">
+          <b>17<i> 分钟</i></b>
+          <h3>女性平均每天花在「穿什么」上的时间</h3>
+          <p>男性为 13 分钟。决策疲劳真实存在,且无法通过「多买衣服」解决。</p>
+        </div>
+        <div class="pain">
+          <b>44<i>%</i></b>
+          <h3>人均 152 件衣物中真正被穿过的比例</h3>
+          <p>过半衣柜处于闲置。存量资产没有被组合利用,是浪费,也是机会。</p>
+        </div>
+        <div class="pain">
+          <b>36<i> 次/年</i></b>
+          <h3>人均每年经历「没衣服穿」的恐慌</h3>
+          <p>近 1/3 的人每周都有这种感觉——尽管衣柜是满的。</p>
+        </div>
+      </div>
+      <p class="pain-src">来源:《电讯报》2016 调研 · Vestiaire Collective · Indyx 2025 衣橱报告,详见 PRD §1.1</p>
+    </div>
+  </section>
+
+  <!-- 02 功能 -->
+  <section id="features" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no">02</span><h2>MVP 的五件事</h2><span class="sec-note">P0 FEATURES · 其余见 PRD 负面清单</span></div>
+      <div class="feat">
+        <div class="feat-row">
+          <span class="feat-no">F1</span>
+          <div>
+            <h3>批量拍照入库<small>≤3 次点击 / 件</small></h3>
+            <p>相册多选、端上压缩直传对象存储。北极星指标是录入:产品价值在 30 件衣物之前不成立,录入环节必须零门槛。</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <span class="feat-no">F2</span>
+          <div>
+            <h3>AI 抠图与打标<small>rembg + 多模态模型</small></h3>
+            <p>云端自动去背生成透明 PNG;视觉模型输出品类、颜色、季节、场景、厚度的结构化标签,用户可滑动纠错,纠错数据回流。</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <span class="feat-no">F3</span>
+          <div>
+            <h3>人台穿搭合成<small>z-index 规则表</small></h3>
+            <p>工具界面用写实中性人台(照片级衣服可信贴合);分享物料走全卡通管线。衣层叠放由品类规则表决定,不搞自由拖拽。</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <span class="feat-no">F4</span>
+          <div>
+            <h3>明日天气推荐<small>规则过滤 × LLM 组搭配</small></h3>
+            <p>温度、降水、风力规则先硬过滤候选,大模型再从中组搭配并生成「为什么明天适合穿它」的理由——可解释,是留存关键。</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <span class="feat-no">F5</span>
+          <div>
+            <h3>穿着日历<small>cost-per-wear</small></h3>
+            <p>一键「就这么穿」记入日历,沉淀单件穿着成本统计;年度穿搭报告在 P2 把记录变成回忆资产。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 演示 -->
+  <section id="demo" class="demo-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no">03</span><h2>交互演示</h2><span class="sec-note">纯前端模拟 · 静态单文件</span></div>
+      <div class="demo-grid">
+        <div class="demo-copy">
+          <h3>切换天气,看 AI 怎么搭</h3>
+          <p>下面的手机模拟了「明日穿搭」首屏。选择明天的天气,推荐引擎会从衣橱里重新过滤候选并给出搭配与理由。</p>
+          <ul class="demo-tips">
+            <li><b>规则先行:</b>温度档 × 衣物厚度硬过滤,永不翻车;大模型只负责在候选内组合与解释。</li>
+            <li><b>z-index 规则表:</b>内搭 &lt; 下装 &lt; 鞋履 &lt; 外套,叠放顺序由品类决定——这正是 PRD 里替代自由编辑器的模板方案。</li>
+            <li><b>理由可见:</b>每套搭配都附带天气依据。可解释性是「每日决策入口」的信任基础。</li>
+          </ul>
+        </div>
+
+        <div class="phone" aria-label="应用界面演示">
+          <div class="screen">
+            <div class="scr-head"><b>明日穿搭</b><span>上海 · 10月17日 周六</span></div>
+            <div class="wx-tabs" role="group" aria-label="选择明日天气">
+              <button class="wx-tab" data-wx="warm" aria-pressed="false">
+                <svg aria-hidden="true"><use href="#i-sun"/></svg><b>晴</b><small>26°C</small>
+              </button>
+              <button class="wx-tab" data-wx="rain" aria-pressed="true">
+                <svg aria-hidden="true"><use href="#i-rain"/></svg><b>小雨</b><small>18°C</small>
+              </button>
+              <button class="wx-tab" data-wx="cold" aria-pressed="false">
+                <svg aria-hidden="true"><use href="#i-snow"/></svg><b>低温</b><small>2°C</small>
+              </button>
+            </div>
+
+            <div class="stage-wrap">
+              <svg viewBox="0 0 220 320" aria-hidden="true"><use href="#mannequin"/></svg>
+              <div class="slot slot-bottom" style="left:78px;top:146px;width:64px;height:148px">
+                <svg class="variant" data-v="pants" viewBox="0 0 64 148"><use href="#g-pants"/></svg>
+                <svg class="variant" data-v="shorts" viewBox="0 0 64 96"><use href="#g-shorts"/></svg>
+              </div>
+              <div class="slot slot-shoes" style="left:82px;top:288px;width:56px;height:40px">
+                <svg class="variant" data-v="sneaker" viewBox="0 0 56 28"><use href="#g-sneaker"/></svg>
+                <svg class="variant" data-v="boot" viewBox="0 0 56 40"><use href="#g-boot"/></svg>
+              </div>
+              <div class="slot slot-top" style="left:64px;top:46px;width:92px;height:112px">
+                <svg class="variant" data-v="tee" viewBox="0 0 92 112"><use href="#g-tee"/></svg>
+                <svg class="variant" data-v="turtle" viewBox="0 0 92 112"><use href="#g-turtle"/></svg>
+              </div>
+              <div class="slot slot-outer" style="left:58px;top:44px;width:104px;height:140px">
+                <svg class="variant" data-v="trench" viewBox="0 0 104 140"><use href="#g-trench"/></svg>
+                <svg class="variant" data-v="puffer" viewBox="0 0 104 140"><use href="#g-puffer"/></svg>
+              </div>
+              <span class="z-tag">z: 内搭 &lt; 外套</span>
+            </div>
+
+            <div class="outfit-meta">
+              <p class="outfit-name" id="outfitName">橄榄绿毛衣 · 深灰长裤 · 风衣</p>
+              <div class="outfit-reason" id="outfitReason"></div>
+            </div>
+            <div class="scr-actions">
+              <button class="scr-btn scr-btn-primary" id="wearBtn">就这么穿</button>
+              <button class="scr-btn scr-btn-ghost" id="nextBtn">换一套</button>
+            </div>
+            <p class="scr-foot">WEATHER · QWEATHER &nbsp;|&nbsp; OUTFIT · LLM + RULES</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 衣橱网格 -->
+      <div class="closet">
+        <div class="closet-head">
+          <h3>我的衣橱</h3>
+          <span>9 件 · 摘要视图 · 打标可纠错</span>
+          <div class="closet-filters" role="group" aria-label="按品类筛选">
+            <button class="chip" data-filter="all" aria-pressed="true">全部</button>
+            <button class="chip" data-filter="top" aria-pressed="false">上装</button>
+            <button class="chip" data-filter="bottom" aria-pressed="false">下装</button>
+            <button class="chip" data-filter="outer" aria-pressed="false">外套</button>
+            <button class="chip" data-filter="shoes" aria-pressed="false">鞋履</button>
+          </div>
+        </div>
+        <div class="closet-grid" id="closetGrid">
+          <div class="closetItem" data-cat="top" style="--c:#F2EDE4"><svg viewBox="0 0 92 112" aria-hidden="true"><use href="#g-tee"/></svg><b>白色 T 恤</b><span>TOP · 棉</span></div>
+          <div class="closetItem" data-cat="top" style="--c:#33302B"><svg viewBox="0 0 92 112" aria-hidden="true"><use href="#g-turtle"/></svg><b>黑色高领毛衣</b><span>TOP · 羊毛</span></div>
+          <div class="closetItem" data-cat="top" style="--c:#8A9B6E"><svg viewBox="0 0 92 112" aria-hidden="true"><use href="#g-tee"/></svg><b>橄榄绿针织衫</b><span>TOP · 羊毛</span></div>
+          <div class="closetItem" data-cat="bottom" style="--c:#2E4057"><svg viewBox="0 0 64 148" aria-hidden="true"><use href="#g-pants"/></svg><b>藏蓝长裤</b><span>BOTTOM · 休闲</span></div>
+          <div class="closetItem" data-cat="bottom" style="--c:#4A4A52"><svg viewBox="0 0 64 148" aria-hidden="true"><use href="#g-pants"/></svg><b>深灰长裤</b><span>BOTTOM · 西装</span></div>
+          <div class="closetItem" data-cat="bottom" style="--c:#B49A72"><svg viewBox="0 0 64 96" aria-hidden="true"><use href="#g-shorts"/></svg><b>卡其短裤</b><span>BOTTOM · 棉</span></div>
+          <div class="closetItem" data-cat="outer" style="--c:#B78B5E"><svg viewBox="0 0 104 140" aria-hidden="true"><use href="#g-trench"/></svg><b>卡其风衣</b><span>OUTER · 防水</span></div>
+          <div class="closetItem" data-cat="outer" style="--c:#26221E"><svg viewBox="0 0 104 140" aria-hidden="true"><use href="#g-puffer"/></svg><b>黑色羽绒服</b><span>OUTER · 厚 ★5</span></div>
+          <div class="closetItem" data-cat="shoes" style="--c:#EFEAE0"><svg viewBox="0 0 56 28" aria-hidden="true"><use href="#g-sneaker"/></svg><b>白色帆布鞋</b><span>SHOES · 布</span></div>
+          <div class="closetItem" data-cat="shoes" style="--c:#6B4A32"><svg viewBox="0 0 56 40" aria-hidden="true"><use href="#g-boot"/></svg><b>棕色切尔西靴</b><span>SHOES · 皮革</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 技术 -->
+  <section id="tech">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no">04</span><h2>技术方案:全部现成积木</h2><span class="sec-note">无一处需要从零训练模型</span></div>
+      <p class="sec-intro">2026 年做这个产品的本质红利:整条链路都由成熟组件拼装,钱花在服务器而非 AI。月成本 300~800 元即可支撑 1 万注册用户。</p>
+
+      <div class="pipeline" aria-label="数据处理管线">
+        <div class="pipe-node"><b>① 拍照 / 相册多选</b><small>端上压缩 ≤300KB</small></div>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <div class="pipe-node"><b>② 直传 OSS</b><small>STS 临时凭证</small></div>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <div class="pipe-node"><b>③ rembg 抠图</b><small>CPU 容器 · 近零成本</small></div>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <div class="pipe-node"><b>④ VL 模型打标</b><small>品类/颜色/季节/厚度</small></div>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <div class="pipe-node"><b>⑤ 规则过滤 + LLM 组搭配</b><small>附推荐理由 · 24h 缓存</small></div>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <div class="pipe-node"><b>⑥ 模板合成穿搭图</b><small>sharp 服务端拼图</small></div>
+      </div>
+
+      <div class="tech-cols">
+        <dl class="stack">
+          <h4>STACK · 技术栈</h4>
+          <div class="stack-group"><dt>端形态</dt><dd><span class="tag hl">PWA 邀请制先行</span><span class="tag">微信小程序(达标后)</span></dd></div>
+          <div class="stack-group"><dt>后端</dt><dd><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span></dd></div>
+          <div class="stack-group"><dt>AI 推理</dt><dd><span class="tag">rembg</span><span class="tag">GLM-4V-Flash(免费)</span><span class="tag">qwen-vl-plus 兜底</span><span class="tag">可插拔网关</span></dd></div>
+          <div class="stack-group"><dt>存储</dt><dd><span class="tag">OSS + CDN</span><span class="tag">签名防盗链 · SSE 加密</span></dd></div>
+          <div class="stack-group"><dt>天气</dt><dd><span class="tag">和风天气 · 5 万次/月免费</span><span class="tag">Open-Meteo(开发期)</span></dd></div>
+        </dl>
+        <div class="cost">
+          <h4>COST · 月成本估算(1 万注册 / DAU 1000)</h4>
+          <table>
+            <thead><tr><th>项目</th><th>低配</th><th>中配</th></tr></thead>
+            <tbody>
+              <tr><td>服务器 + 数据库</td><td>¥150</td><td>¥400</td></tr>
+              <tr><td>OSS + CDN</td><td>¥15</td><td>¥45</td></tr>
+              <tr><td>抠图 + 打标</td><td>¥0</td><td>¥120</td></tr>
+              <tr><td>LLM 推荐</td><td>¥0</td><td>¥90</td></tr>
+              <tr><td>天气 API</td><td>¥0</td><td>¥0</td></tr>
+              <tr><td><b>合计</b></td><td><b>≈¥300</b></td><td><b>≈¥800</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="redline">
+        <h4>三条硬约束(评审裁决)</h4>
+        <p><b>形象两分法:</b>工具场景用写实人台,传播场景用全卡通管线;「照片衣服直接贴卡通身体」列入负面清单。</p>
+        <p><b>AI 三律:</b>AI 能力一律走可插拔网关;AI 产出一律带「AI 生成」标识;话术避开「AI 试穿 / AI 换脸」等深度合成触发词。</p>
+        <p><b>不做真实感试穿:</b>开源 VTON 权重全部 CC BY-NC-SA 禁商用,商用 API 是成本与合规的双重陷阱——明确放弃。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 路线图 -->
+  <section id="roadmap" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no">05</span><h2>路线图:先验证,再投入</h2><span class="sec-note">GATE-DRIVEN</span></div>
+      <div class="phase">
+        <div class="phase-tag">PHASE 0 · 6–10 周<b>验证</b></div>
+        <div>
+          <h3>PWA 邀请制内测</h3>
+          <p>交付 F1–F8(录入 / 打标 / 人台合成 / 天气推荐 / 日历),合规准备与开发并行(主体 → ICP 备案 → 模型登记,约 4–9 周)。</p>
+          <span class="gate">GATE:30 日留存 ≥25% 且人均录入 ≥40 件,不达标即止损</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-tag">PHASE 1 · 累计 12–16 周<b>上线</b></div>
+        <div>
+          <h3>微信小程序公测</h3>
+          <p>工具类目报审上线;全卡通形象管线、分享卡片、服务号提醒、简化风格诊断。</p>
+          <span class="gate">GATE:过审 + 次周留存 ≥35%</span>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-tag">PHASE 2 · 达标后<b>变现</b></div>
+        <div>
+          <h3>增长与商业闭环</h3>
+          <p>分享裂变、缺失单品电商导购佣金、年度穿搭报告、品牌联名(形象层成熟后)。</p>
+          <span class="gate">订阅 ¥10–15/月 · 服饰佣金 2–10%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 差异化与负面清单 -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no">06</span><h2>差异化与自我约束</h2><span class="sec-note">POSITIONING</span></div>
+      <div class="diff-wrap">
+        <div class="diff">
+          <table>
+            <thead><tr><th>维度</th><th>国际衣橱 App</th><th>巨头 AI 试衣</th><th>本产品</th></tr></thead>
+            <tbody>
+              <tr><td>管理你已有的衣服</td><td class="yes">✓ 核心功能</td><td class="no">✗ 只管卖新货</td><td class="yes">✓ 核心资产</td></tr>
+              <tr><td>个人虚拟形象</td><td class="no">✗ 无人做</td><td class="no">✗ 与商品库绑定</td><td class="yes">✓ 呈现层与传播入口</td></tr>
+              <tr><td>每日天气决策</td><td class="no">△ 部分有</td><td class="no">✗</td><td class="yes">✓ 打开即得</td></tr>
+              <tr><td>国内千万级玩家</td><td class="no">—</td><td class="no">—</td><td class="yes">空档 · 窗口 12–18 个月</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <ul class="nolist">
+            <li><i>✕</i><div>3D 形象 / VRM 换装<p>任意实拍衣服穿到 3D 身体是研究前沿,平台 avatar 生态换的不是用户的衣服。</p></div></li>
+            <li><i>✕</i><div>真实感 Diffusion 试穿<p>开源权重禁商用;商用 API 每张 ¥0.3–0.5 且触发最严合规档位。</p></div></li>
+            <li><i>✕</i><div>社区与自由图层编辑器<p>冷启动期运营成本拖死小团队;固定模板替代编辑器,工期 6 周压到 3 天。</p></div></li>
+            <li><i>✕</i><div>自研模型 / 端上推理<p>全部使用已备案云端 API,规避数据出境评估与生成式算法备案。</p></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-logo">智能衣柜 · MyCloset AI</p>
+    <p>
+      本页为项目说明 DEMO · 纯静态单文件 HTML · 无外部依赖<br>
+      完整需求与评审记录见 <a href="PRD.md">PRD.md</a> · 由 5-Agent 评审(4 专家调研 + CTO 对抗裁决)产出 · 2026.10
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  /* ---------- 穿搭数据 ---------- */
+  var OUTFITS = {
+    warm: [
+      { name:"白色 T 恤 · 藏蓝长裤",
+        reason:"明日<b>晴,26°C</b>,紫外线中等。轻薄透气即可,<b>无需外套</b>;帆布鞋适合干燥路面。",
+        set:{ top:["tee","#F2EDE4"], bottom:["pants","#2E4057"], shoes:["sneaker","#EFEAE0"], outer:null } },
+      { name:"白色 T 恤 · 卡其短裤",
+        reason:"明日<b>晴,26°C</b>,体感偏热。短裤更凉爽,但<span style='white-space:nowrap'>早间 22°C</span> 偏凉,怕冷可换回长裤。",
+        set:{ top:["tee","#F2EDE4"], bottom:["shorts","#B49A72"], shoes:["sneaker","#EFEAE0"], outer:null } }
+    ],
+    rain: [
+      { name:"橄榄绿毛衣 · 深灰长裤 · 风衣",
+        reason:"明日<b>小雨,16–19°C</b>,湿度 85%。<b>防水风衣必备</b>,毛衣应对降温;切尔西靴皮革鞋面不怕溅水。",
+        set:{ top:["turtle","#33302B"], bottom:["pants","#4A4A52"], shoes:["boot","#6B4A32"], outer:["trench","#B78B5E"] } },
+      { name:"黑色高领毛衣 · 藏蓝长裤 · 风衣",
+        reason:"明日<b>小雨,16–19°C</b>。高领挡风,藏蓝耐脏;风衣收纳兜方便放伞,通勤正式度也够。",
+        set:{ top:["turtle","#33302B"], bottom:["pants","#2E4057"], shoes:["boot","#6B4A32"], outer:["trench","#B78B5E"] } }
+    ],
+    cold: [
+      { name:"高领毛衣 · 深灰长裤 · 羽绒服",
+        reason:"明日<b>低温,0–4°C</b>,阵风 4 级。按<b>三层穿衣法</b>:高领打底 + 毛衣中层 + 厚度 ★5 羽绒服,靴子保暖防滑。",
+        set:{ top:["turtle","#D9CBB2"], bottom:["pants","#4A4A52"], shoes:["boot","#6B4A32"], outer:["puffer","#26221E"] } },
+      { name:"铁锈红毛衣 · 藏蓝长裤 · 羽绒服",
+        reason:"明日<b>低温,0–4°C</b>。深色系耐脏且吸热;铁锈红提亮冬季气色——大模型在候选里做的色彩平衡。",
+        set:{ top:["turtle","#B5654A"], bottom:["pants","#2E4057"], shoes:["boot","#6B4A32"], outer:["puffer","#26221E"] } }
+    ]
+  };
+
+  var SLOT_MAP = { top:"slot-top", bottom:"slot-bottom", shoes:"slot-shoes", outer:"slot-outer" };
+  var currentWx = "rain", currentIdx = 0;
+
+  function $(s,c){ return (c||document).querySelector(s); }
+  function $$(s,c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); }
+
+  function render(){
+    var item = OUTFITS[currentWx][currentIdx];
+    $("#outfitName").textContent = item.name;
+    $("#outfitReason").innerHTML = item.reason;
+    ["top","bottom","shoes","outer"].forEach(function(part){
+      var slot = $(".slot-" + part);
+      var conf = item.set[part];
+      if(!conf){ slot.style.visibility = "hidden"; return; }
+      slot.style.visibility = "visible";
+      slot.style.setProperty("--c", conf[1]);
+      $$(".variant", slot).forEach(function(v){
+        v.classList.toggle("on", v.getAttribute("data-v") === conf[0]);
+      });
+    });
+  }
+
+  $$(".wx-tab").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      currentWx = btn.getAttribute("data-wx");
+      currentIdx = 0;
+      $$(".wx-tab").forEach(function(b){ b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+      render();
+    });
+  });
+
+  $("#nextBtn").addEventListener("click", function(){
+    currentIdx = (currentIdx + 1) % OUTFITS[currentWx].length;
+    render();
+  });
+
+  var wearBtn = $("#wearBtn");
+  wearBtn.addEventListener("click", function(){
+    wearBtn.textContent = "已记入今日 ✓";
+    wearBtn.disabled = true;
+    setTimeout(function(){ wearBtn.textContent = "就这么穿"; wearBtn.disabled = false; }, 1600);
+  });
+
+  /* ---------- 衣橱筛选 ---------- */
+  $$(".chip").forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var f = chip.getAttribute("data-filter");
+      $$(".chip").forEach(function(c){ c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+      $$("#closetGrid .closetItem").forEach(function(it){
+        it.classList.toggle("hide", f !== "all" && it.getAttribute("data-cat") !== f);
+      });
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
